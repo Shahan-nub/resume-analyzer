@@ -7,7 +7,7 @@ import React, { useEffect, useState } from "react";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
 
-const page = () => {
+const DashboardPage = () => {
   const { isLoaded, isSignedIn, userId, sessionId, getToken } = useAuth();
   const [analysis, setAnalysis] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -74,4 +74,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default DashboardPage;
