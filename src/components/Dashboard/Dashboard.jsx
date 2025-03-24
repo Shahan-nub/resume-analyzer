@@ -1,6 +1,7 @@
 "use client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Link from "next/link";
+import { useState } from "react";
 
 export default function Dashboard({ resumeData, jobMatches }) {
   const cleanText = (htmlString) => {
@@ -10,6 +11,18 @@ export default function Dashboard({ resumeData, jobMatches }) {
       .trim();
   };
 
+  const [visibleCount, setVisibleCount] = useState(3);
+  const [showMoreSkills, setShowMoreSkills] = useState(false);
+
+  const showMore = () => {
+    setVisibleCount(resumeData?.Skills?.length); // Show all items
+    setShowMoreSkills(!showMoreSkills);
+  };
+
+  const showLess = () => {
+    setVisibleCount(3); // Collapse back
+    setShowMoreSkills(!showMoreSkills)
+  };
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-6">
       {/* Profile Card */}
@@ -43,11 +56,27 @@ export default function Dashboard({ resumeData, jobMatches }) {
         </CardHeader>
         <CardContent>
           <ul>
-            {resumeData?.Skills?.map((skill, index) => (
+            {resumeData?.Skills?.slice(0, visibleCount).map((skill, index) => (
               <li key={index} className="badge badge-primary mr-2">
                 {skill}
               </li>
             )) || "N/A"}
+
+            {!showMoreSkills ? (
+              <button
+                onClick={showMore}
+                className="mt-2 text-blue-500 hover:underline"
+              >
+                Show More
+              </button>
+            ) : (
+              <button
+                onClick={showLess}
+                className="mt-2 text-blue-500 hover:underline"
+              >
+                Show Less
+              </button>
+            )}{" "}
           </ul>
         </CardContent>
       </Card>
@@ -96,7 +125,10 @@ export default function Dashboard({ resumeData, jobMatches }) {
             jobMatches.map((job, index) => {
               const cleanSnippet = cleanText(job.snippet);
               return (
-                <Card key={index} className={`scale-95 hover:scale-100 transition-all duration-500 hover:shadow-sm hover:shadow-[#278ab7]`}>
+                <Card
+                  key={index}
+                  className={`scale-95 hover:scale-100 transition-all duration-500 hover:shadow-sm hover:shadow-[#278ab7]`}
+                >
                   <CardHeader>
                     <div className="flex gap-2 lg:text-xl text-lg items-center text-[#52a8ff]">
                       <h1 className="font-bold">{index}</h1>
@@ -104,7 +136,7 @@ export default function Dashboard({ resumeData, jobMatches }) {
                       <CardTitle>{job.title}</CardTitle>
                     </div>
                   </CardHeader>
-                  <CardContent >
+                  <CardContent>
                     <p>
                       <strong>About: </strong> {cleanSnippet}
                     </p>
@@ -121,9 +153,10 @@ export default function Dashboard({ resumeData, jobMatches }) {
                       <strong>Type:</strong> {job.type}
                     </p>
                     <p className="lg:my-4 my-2">
-                      <strong>Link to Apply:</strong> 
-                      <Link className="mx-2 text-[#52a8ff] " href={job.link}>Apply here.</Link>
-
+                      <strong>Link to Apply:</strong>
+                      <Link className="mx-2 text-[#52a8ff] " href={job.link}>
+                        Apply here.
+                      </Link>
                     </p>
                   </CardContent>
                 </Card>
