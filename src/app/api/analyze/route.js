@@ -6,7 +6,7 @@ export const POST = async (req) => {
   try {
     const reqBody = await req.json();
     const { userId, text } = reqBody;
-    console.log(text);
+    // console.log(text);
     const result = await analyzeResume(text);
 
     const dbResponse = await saveResumeAnalysis(userId, result);

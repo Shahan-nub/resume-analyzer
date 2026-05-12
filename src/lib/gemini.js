@@ -1,7 +1,7 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
 const gemini = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-const model = gemini.getGenerativeModel({ model: "gemini-1.5-flash" });
+const model = gemini.getGenerativeModel({ model: "gemini-2.5-flash" });
 
 export const analyzeResume = async (text) => {
   const prompt = `
@@ -52,9 +52,7 @@ export const analyzeResume = async (text) => {
   `;
 
   try {
-    const response = await model.generateContent({
-      contents: [{ role: "user", parts: [{ text: prompt }] }],
-    });
+    const response = await model.generateContent(prompt);
 
     // console.log("full response: ",JSON.stringify(response,null,2))
     const result = response.response.candidates[0].content.parts[0].text;
@@ -64,10 +62,11 @@ export const analyzeResume = async (text) => {
     const cleanJsonString = result.replace(/```json|```/g, "").trim();
     const parsedResult = JSON.parse(cleanJsonString);
 
+    // console.log("Parsed Resume Data:", parsedResult);
     return parsedResult;
 
   } catch (error) {
-    console.error("Error:", error);
+    console.error("Error (gemini):", error);
     return { error: error.message };
   }
 };
