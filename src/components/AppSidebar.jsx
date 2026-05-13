@@ -1,3 +1,4 @@
+'use client'
 import { Calendar, Home, Inbox, Search, Settings } from "lucide-react";
 
 import {
@@ -13,6 +14,7 @@ import {
 import { SignedIn, SignOutButton } from "@clerk/nextjs";
 import { UserButton } from "@clerk/nextjs";
 import { GoSignOut } from "react-icons/go";
+import Link from "next/link";
 
 // Menu items.
 const items = [
@@ -52,22 +54,26 @@ export function AppSidebar() {
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
-                    <a href={item.url}>
-                      <item.icon />
-                      <span>{item.title}</span>
-                    </a>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
+                <SidebarMenuButton asChild key={item.title}>
+                  <Link href={item.url}>
+                    <item.icon />
+                    <span>{item.title}</span>
+                  </Link>
+                </SidebarMenuButton>
               ))}
               <div className="cursor-pointer hover:backdrop-blur-2xl rounded-sm hover:bg-[#262626] flex items-center px-2 py-2 gap-2 text-left ">
-                <SignedIn>
-                <GoSignOut></GoSignOut>
-                  <SignOutButton redirectUrl="/sign-up">
-                    <p>Sign Out</p>
-                  </SignOutButton>
-                </SignedIn>
+                <SidebarMenuItem>
+                  <SignedIn>
+                    <SignOutButton redirectUrl="/sign-up">
+                      <button className="cursor-pointer hover:bg-[#262626] rounded-sm px-2 py-2 w-full text-left">
+                        <div className="flex items-center gap-2">
+                          <GoSignOut />
+                          <span>Sign Out</span>
+                        </div>
+                      </button>
+                    </SignOutButton>
+                  </SignedIn>
+                </SidebarMenuItem>
               </div>
             </SidebarMenu>
           </SidebarGroupContent>
